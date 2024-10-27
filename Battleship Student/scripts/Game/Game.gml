@@ -177,6 +177,8 @@ function Game() constructor {
 		//Get array of ship coords for the ship that was just sunk
 		var sunkShipCoords = board.getLastSunk();
 			
+	    show_debug_message("Coordinates of sunk ship: " + string(sunkShipCoords));
+
 		//For each set of coords in the sunken ship, set the objGridCell to the Sunk sprite
 		for( var i = 0; i < array_length(sunkShipCoords); i++) {
 			var coords = string_split(sunkShipCoords[i]," "); //Splits the string on the space, creating an array of size two

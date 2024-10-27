@@ -4,7 +4,7 @@
 
 global.game = new Game(); //Create new instance of Game struct
 
-
+show_debug_message(global.game.board.toString()); //meet .toString spec
 
 
 
