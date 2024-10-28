@@ -11,6 +11,7 @@
 /// @return {Struct.Cell} New instance of the Cell struct.
 function Cell(_x, _y) constructor {
 	
+	//testing GitHub :)
 	enum STATE {EMPTY, MISS, HIT, SHIP}; //Enum for state of the cell
 	xPos = _x;                           //X position of cell in the grid
 	yPos = _y;                           //Y position of cell in the grid
