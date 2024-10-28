@@ -57,7 +57,7 @@ function Board() constructor {
 	/// @func isClear()
 	/// @desc Returns whether or not all ships have been sunk.
 	/// @return {bool} True if all ships sunk. Otherwise, false.
-	function isClear() {
+	function isClear() {                                    //Test
 	    for (var i = 0; i < array_length(shipList); i++) {	//loop through all my ships
 	        var ship = shipList[i];
         
