@@ -27,14 +27,14 @@ function Snake(_x, _y) constructor {
 	/// @desc Returns the Cell representing the Snake's head from the locations queue.
 	/// @return {Struct.Cell} The Cell representing the Snake's head
 	function getSnakeHead() {
-		
+		return ds_queue_tail(locations); //Return the cell at the tail of the locations queue (the snake's head)
 	}//end getHead
 	
 	/// @func getLastTail()
 	/// @desc Returns the Cell that represents the Snake's previous tail after it was dequeued from the locations queue.
 	/// @return {Struct.Cell} The Cell representing the Snake's previous tail
 	function getLastTail() {
-		
+		return lastTail; //Return the previous head of the queue (the snake's old tail)
 	}//end getLastTail
 	
 	/// @func grow()
@@ -42,15 +42,13 @@ function Snake(_x, _y) constructor {
 	///      (Hint: You will want to grow the tail of the Snake, as growing the Head could cause it to grow out of bounds)
 	/// @return {undefined}
 	function grow() {
+		ds_queue_enqueue(locations, lastTail); //Enqueue the previous tail into locations
 		
-		//Adds back the previous tail Cell to the locations queue to grow the Snake
+		for (var i = 0; i < length; i++) { //Loop through all values except for lastTail
+			ds_queue_enqueue(locations, ds_queue_dequeue(locations)); //Dequeue locations and enqueue the dequeued cell
+		}//end for
 		
-		
-		//Since we inserted the tail at the back of the queue, we need to shift it to the front
-		//So, we will remove and re-add all the Cells in the locations queue, aside from the newly added tail
-		
-		
-		//Increment length
+		length++; //Increment length
 	}//end grow
 	
 	/// @func checkCollisions(width, height)
@@ -59,20 +57,15 @@ function Snake(_x, _y) constructor {
 	/// @param {real} height The overall height of the gird (in Cells, not pixels)
 	/// @return {bool} True if collision with wall or itself occurred, otherwise false.
 	function checkCollisions(width, height) {
+		if (xPos < 0 || yPos < 0 || xPos >= width || yPos >= height) return true; //Returns true if the snake collides with the wall
 		
-		//Check if snake has left the bounds of the screen
+		var loc = toArray(); //Saves the locations as an array
 		
+		for (var i = 0; i < length-1; i++) { //Increments through all locations except for the head
+			if (xPos == loc[i].getX() && yPos == loc[i].getY()) return true; //Returns true if the snake collides with itself
+		}//end for
 		
-		//Check if snake's head has collided with any pieces of its body (except the head itself)
-		
-			//Remove next Cell from locations queue
-			
-			//Check if snake head collided with this piece
-			
-			//Re-add Cell to locations queue
-		
-		//Remove and re-add snake head to locations queue to maintain proper order
-		
+		return false; //Returns false if there is no collision
 	}//end checkCollisions
 	
 	/// @func update()
@@ -80,38 +73,39 @@ function Snake(_x, _y) constructor {
 	///       removing the Snake's tail, and adding the new Snake head.
 	/// @return {undefined}
 	function update() {
-		//Update x and y positions of the head of the snake
-
-		//Remove Snake tail from the queue and store as lastTail
-		//Insert new Snake head into the queue
+		xPos += movements[direct][0]; //Change the x position based on the direction's x speed
+		yPos += movements[direct][1]; //Change the y position based on the direction's y speed
+		
+		lastTail = ds_queue_dequeue(locations); //Save last tail
+		ds_queue_enqueue(locations, new Cell(xPos, yPos)); //Make a new cell for the head and add it to the queue
 	}//end update
 	
 	/// @func moveUp()
 	/// @desc Sets the current direction of the Snake to up. (HINT: You should not be able to move 180 degrees)
 	/// @return {undefined}
 	function moveUp() {
-		
+		if (direct != DIR.DOWN) direct = DIR.UP; //Set direction to UP (except if already DOWN)
 	}//end moveUp
 	
 	/// @func moveDown()
 	/// @desc Sets the current direction of the Snake to down. (HINT: You should not be able to move 180 degrees)
 	/// @return {undefined}
 	function moveDown() {
-			
+		if (direct != DIR.UP) direct = DIR.DOWN; //Set direction to DOWN (except if already UP)
 	}//end moveDown
 	
 	/// @func moveRight()
 	/// @desc Sets the current direction of the Snake to right. (HINT: You should not be able to move 180 degrees)
 	/// @return {undefined}
 	function moveRight() {
-		
+		if (direct != DIR.LEFT) direct = DIR.RIGHT; //Set direction to RIGHT (except if already LEFT)
 	}//end moveRight
 	
 	/// @func moveLeft()
 	/// @desc Sets the current direction of the Snake to left. (HINT: You should not be able to move 180 degrees)
 	/// @return {undefined}
 	function moveLeft() {
-
+		if (direct != DIR.RIGHT) direct = DIR.LEFT; //Set direction to LEFT (exept if already RIGHT)
 	}//end moveLeft
 	
 	/// @func toArray()
@@ -120,13 +114,15 @@ function Snake(_x, _y) constructor {
 	///       (The order of the cells in the locations queue should be in tact after this function terminates (not necessarily during) )
 	/// @return {Array<Struct.Cell>} An array containing the Cells from the locations queue
 	function toArray() {
-		//Create an empty array the same length as the snake for holding Cells.
+		var loc = array_create(length); //Create an array of locations
 		
-		//Loop through all elements of the array, filling each with Cells from the locations queue
+		for (var i = 0; i < length; i++) { //Loop through the whole locations queue
+			var tail = ds_queue_dequeue(locations); //save dequeued snake location
+			loc[i] = tail; //Add cell to the array
+			ds_queue_enqueue(locations, tail); //Enqueue the cell back into the locations queue
+		}//end for
 		
-			//Pop the next Cell off of the locations queue and store in the array
-			//Place the Cell back into the back of the queue
-		
+		return loc; //Return the array of cells
 	}//end toArray
 		
 	/// @func toString
