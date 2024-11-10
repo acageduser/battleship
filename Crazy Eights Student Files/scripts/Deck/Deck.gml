@@ -20,8 +20,9 @@ function Deck() constructor {
 	/// @func shuffle()
 	/// @desc Return all used cards to the deck (if any) and shuffle the deck.
 	/// @return {undefined}
+	//Created by Ewan, Ryan, and Jimmy
 	function shuffle() {
-		var temp = array_create(52); //Create temporary array for 52 cards
+		temp = array_create(52); //Create temporary array for 52 cards
 		//Temp counter for index
 		var idx = 0;
 		
@@ -42,7 +43,7 @@ function Deck() constructor {
 		ds_stack_clear(deck);		//Clear the deck entirely
 		
 		//Push the shuffled cards into the deck
-		for (var i = 0; i < 52; i++) {
+		for (var i = 0; i < array_length(temp); i++) {
 			ds_stack_push(deck, temp[i]);
 		}//end for
 		
@@ -53,28 +54,32 @@ function Deck() constructor {
 	/// @func reshuffle()
 	/// @desc Reshuffles the current Cards in the deck. (Does not re-populate the deck, for that, use shuffle() )
 	/// @return {undefined}
+	//Created by Jimmy and Ryan
 	function reshuffle() {
-		//Create a temp array with 52 spaces (for 52 cards)
-		var temp = array_create(52);
-		
-		//Pop all 52 cards into the temp array
-		for (var i = 0; i < 52; i++) {
-			temp[i] = ds_stack_pop(deck);
-		}//end for
-		
-		//randomize the shuffle and then shuffle the array
-		randomize();
-		temp = array_shuffle(temp);
-		
-		//Push all cards back into the deck
-		for (var i = 0; i < 52; i++) {
-			ds_stack_push(deck, temp[i]);
-		}//end for
+		//Create temp array size of the deck
+        var temp = array_create(ds_stack_size(deck));
+        
+        //Move contents of deck into temp array
+        var idx = 0;
+        while (!ds_stack_empty(deck)) {
+            temp[idx] = ds_stack_pop(deck);
+            idx++;
+        }//end while
+
+        //Shuffle the array (DON'T FORGET RANDOMIZE)
+        randomize();
+        temp = array_shuffle(temp);
+
+        //Add contents of temp array back into deck
+        for (var i = 0; i < array_length(temp); i++) {
+            ds_stack_push(deck, temp[i]);
+        }//end for
 	}//end reshuffle
 	
 	/// @func cardsLeft()
 	/// @desc Returns the number of Cards remaining in the deck.
 	/// @return {int} The number of Cards remaining in the deck.
+	//Created by Ewan
 	function cardsLeft() {
 		//Returns the size of the deck
 		return ds_stack_size(deck);
@@ -83,6 +88,7 @@ function Deck() constructor {
 	/// @func deal()
 	/// @desc Removes and returns the top Card from the deck.
 	/// @return {Struct.Card} The top Card from the deck.
+	//Created by Ewan
 	function deal() {
 		//Pops the top card from the deck and returns the card
 		return ds_stack_pop(deck);
@@ -91,14 +97,16 @@ function Deck() constructor {
 	/// @func isEmpty()
 	/// @desc Returns if the deck is currently empty.
 	/// @return {boolean} True if empty, false otherwise
+	//Created by Ryan
 	function isEmpty() {
 		//Return whether or not the size of the deck is 0
-		return cardsLeft() == 0;
+		return ds_stack_empty(deck);
 	}//end isEmpty
 
 	/// @func toString()
 	/// @desc Returns a string representation of the deck (mainly for debug purposes as Card.toString() exists)
 	/// @return {string} String representation of the deck.
+	//Created by Ewan, modified by Ryan
 	function toString() {
 		var size = ds_stack_size(deck);
 		var temp = array_create(size);
@@ -112,18 +120,14 @@ function Deck() constructor {
 		//Reverse the temp array
 		temp = array_reverse(temp);
 		
-		//Loop through the temp array (except for the last value) and add the cards to the string and deck
-		for (var i = 0; i < size - 1; i++) {
-			str += string(temp[i]) + " ";
+		//Loop through the temp array and add the cards to the string and deck
+		for (var i = 0; i < size; i++) {
+			str += temp[i].toString() + " ";
 			ds_stack_push(deck, temp[i]);
 		}//end for
 		
-		//Add the last card to the string and deck
-		str += string(temp[size-1]);
-		ds_stack_push(deck, temp[size-1]);
-		
 		//Return the string
-		return str;
+		return string_trim(str);
 	}//end toString
 
 }//end Deck

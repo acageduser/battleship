@@ -18,6 +18,7 @@ function CrazyEightsPile() constructor {
 	///       Any other cards are acceptable. In this case, the card is added to the pile and false is returned.
 	/// @param {Struct.Card} c The first Card to be dealt onto the play pile.
 	/// @return {boolean} True if redeal necessary, false otherwise.
+	//Created by Ewan, Ryan, and Jimmy
 	function deal(c) {
 		if (c.getRank() == RANK.EIGHT) {
 			return true; //Return true for redeal
@@ -35,6 +36,7 @@ function CrazyEightsPile() constructor {
 	///       INVALID indicates card cannot be played to the pile.
 	/// @param {Struct.Card} c The card attempting to be played to the play pile.
 	/// @return {enum.PLAYTYPE} WILD if Crazy Eight Played, VALID if standard valid play, or INVALID
+	//Created by Ewan
 	function canPlayCard(c) {
 		enum PLAYTYPE {WILD, VALID, INVALID};
 		
@@ -54,6 +56,7 @@ function CrazyEightsPile() constructor {
 	/// @desc Adds the specified Card to the play pile.
 	/// @param {Struct.Card} The card to be added
 	/// @return {undefined}
+	//Created by Jimmy
 	function addCard(c) {
 		//pushes the card onto the top of the pile
 		ds_stack_push(pile, c);
@@ -62,6 +65,7 @@ function CrazyEightsPile() constructor {
 	/// @func getTop()
 	/// @desc Returns the Card found on top of the pile (does not remove it).
 	/// @return {Struct.Card} The Card on top of the pile
+	//Created by Jimmy
 	function getTop() {
 		//Return the top card without removing it
 		return ds_stack_top(pile);
@@ -70,12 +74,13 @@ function CrazyEightsPile() constructor {
 	/// @func toString()
 	/// @desc Returns a String representation of the Pile
 	/// @return {string} A String representation of the Pile
+	//Created by Ewan, modified by Ryan
 	function toString() {
 		var size = ds_stack_size(pile);
 		var temp = array_create(size);
 		var str = "";
 		
-		//Loop through the pile and pop the top card onto the temp array
+		//Loop through the deck and pop the top card onto the temp array
 		for (var i = 0; i < size; i++) {
 			temp[i] = ds_stack_pop(pile);
 		}//end for
@@ -83,18 +88,14 @@ function CrazyEightsPile() constructor {
 		//Reverse the temp array
 		temp = array_reverse(temp);
 		
-		//Loop through the temp array (except for the last value) and add the cards to the string and pile
-		for (var i = 0; i < size - 1; i++) {
-			str += string(temp[i]) + " ";
+		//Loop through the temp array and add the cards to the string and deck
+		for (var i = 0; i < size; i++) {
+			str += temp[i].toString() + " ";
 			ds_stack_push(pile, temp[i]);
 		}//end for
 		
-		//Add the last card to the string and pile
-		str += string(temp[size-1]);
-		ds_stack_push(pile, temp[size-1]);
-		
 		//Return the string
-		return str;
+		return string_trim(str);
 	}//end toString
 	
 }//end CrazyEightsPile
