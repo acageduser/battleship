@@ -18,16 +18,18 @@ function Snake(_x, _y) constructor {
 	length = 1;                       //The length of the snake
 	locations = ds_queue_create();    //Queue for storing the Cells of all of the parts of the snake (Tail of snake is at head of queue)
 	lastTail = new Cell(xPos, yPos);  //Stores the Cell that was the previous tail after it is dequeued (For setting Cell back to empty) (This could be useful for growing)
-	
+    locations = [ lastTail ];         //array for storing all my snake cells
+
 	
 	//Place head of Snake in Queue and set its status to snake
-	ds_queue_enqueue(locations, lastTail);
+	// ds_queue_enqueue(locations, lastTail); //NO MORE ds queues
 	
 	/// @func getSnakeHead()
 	/// @desc Returns the Cell representing the Snake's head from the locations queue.
 	/// @return {Struct.Cell} The Cell representing the Snake's head
 	function getSnakeHead() {
-		return ds_queue_tail(locations); //Return the cell at the tail of the locations queue (the snake's head)
+		return locations[array_length(locations) - 1]; //Return the cell at the tail of the locations queue (the snake's head)
+		//return ds_queue_tail(locations); //Return the cell at the tail of the locations queue (the snake's head)
 	}//end getHead
 	
 	/// @func getLastTail()
@@ -42,11 +44,18 @@ function Snake(_x, _y) constructor {
 	///      (Hint: You will want to grow the tail of the Snake, as growing the Head could cause it to grow out of bounds)
 	/// @return {undefined}
 	function grow() {
-		ds_queue_enqueue(locations, lastTail); //Enqueue the previous tail into locations
+        //insert lastTail back at the beginning of the locations array (backwards!)
+        array_resize(locations, array_length(locations) + 1);		//grow array and THEN
+        for (var i = array_length(locations) - 1; i > 0; i--) {		//shift my elements right
+            locations[i] = locations[i - 1];
+        }
+        locations[0] = lastTail; //place the 'tail' at the beginning (backwards!)
 		
-		for (var i = 0; i < length; i++) { //Loop through all values except for lastTail
-			ds_queue_enqueue(locations, ds_queue_dequeue(locations)); //Dequeue locations and enqueue the dequeued cell
-		}//end for
+		//ds_queue_enqueue(locations, lastTail); //Enqueue the previous tail into locations
+		
+		//for (var i = 0; i < length; i++) { //Loop through all values except for lastTail
+		//	ds_queue_enqueue(locations, ds_queue_dequeue(locations)); //Dequeue locations and enqueue the dequeued cell
+		//}//end for
 		
 		length++; //Increment length
 	}//end grow
@@ -59,11 +68,16 @@ function Snake(_x, _y) constructor {
 	function checkCollisions(width, height) {
 		if (xPos < 0 || yPos < 0 || xPos >= width || yPos >= height) return true; //Returns true if the snake collides with the wall
 		
-		var loc = toArray(); //Saves the locations as an array
+        //check if the snake hits itslef here by checking if the new location is equal to the old locations
+        for (var i = 0; i < array_length(locations) - 1; i++) {
+            if (xPos == locations[i].getX() && yPos == locations[i].getY()) return true;
+        }
 		
-		for (var i = 0; i < length-1; i++) { //Increments through all locations except for the head
-			if (xPos == loc[i].getX() && yPos == loc[i].getY()) return true; //Returns true if the snake collides with itself
-		}//end for
+		//var loc = toArray(); //Saves the locations as an array
+		
+		//for (var i = 0; i < length-1; i++) { //Increments through all locations except for the head
+		//	if (xPos == loc[i].getX() && yPos == loc[i].getY()) return true; //Returns true if the snake collides with itself
+		//}//end for
 		
 		return false; //Returns false if there is no collision
 	}//end checkCollisions
@@ -76,8 +90,18 @@ function Snake(_x, _y) constructor {
 		xPos += movements[direct][0]; //Change the x position based on the direction's x speed
 		yPos += movements[direct][1]; //Change the y position based on the direction's y speed
 		
-		lastTail = ds_queue_dequeue(locations); //Save last tail
-		ds_queue_enqueue(locations, new Cell(xPos, yPos)); //Make a new cell for the head and add it to the queue
+		//save last tail + remove it from 'locations'
+        lastTail = locations[0];
+        for (var i = 0; i < array_length(locations) - 1; i++) {
+            locations[i] = locations[i + 1];
+        }
+        array_resize(locations, array_length(locations) - 1);	//https://manual.gamemaker.io/beta/en/GameMaker_Language/GML_Reference/Variable_Functions/array_push.htm
+																//no need to know the length of the array!
+        //add the new head my 'locations' variable
+        array_push(locations, new Cell(xPos, yPos));
+
+	//	lastTail = ds_queue_dequeue(locations); //Save last tail
+	//	ds_queue_enqueue(locations, new Cell(xPos, yPos)); //Make a new cell for the head and add it to the queue
 	}//end update
 	
 	/// @func moveUp()
@@ -114,15 +138,18 @@ function Snake(_x, _y) constructor {
 	///       (The order of the cells in the locations queue should be in tact after this function terminates (not necessarily during) )
 	/// @return {Array<Struct.Cell>} An array containing the Cells from the locations queue
 	function toArray() {
-		var loc = array_create(length); //Create an array of locations
 		
-		for (var i = 0; i < length; i++) { //Loop through the whole locations queue
-			var tail = ds_queue_dequeue(locations); //save dequeued snake location
-			loc[i] = tail; //Add cell to the array
-			ds_queue_enqueue(locations, tail); //Enqueue the cell back into the locations queue
-		}//end for
+		return locations;
 		
-		return loc; //Return the array of cells
+		//var loc = array_create(length); //Create an array of locations
+		
+		//for (var i = 0; i < length; i++) { //Loop through the whole locations queue
+		//	var tail = ds_queue_dequeue(locations); //save dequeued snake location
+		//	loc[i] = tail; //Add cell to the array
+		//	ds_queue_enqueue(locations, tail); //Enqueue the cell back into the locations queue
+		//}//end for
+		
+		//return loc; //Return the array of cells
 	}//end toArray
 		
 	/// @func toString
@@ -131,12 +158,18 @@ function Snake(_x, _y) constructor {
 	function toString() {
 		str = "";
 		
-		for(var i = 0; i < ds_queue_size(locations); i++) {
-			var currPiece = ds_queue_dequeue(locations); //Pop the next Cell off of the locations queue
-			var strPiece = string(currPiece.getX() ) + " " + string(currPiece.getY() ); //Create string representation of the coordinates of currPiece
-			str = strPiece + " " + str; //Add string representation to front of final string
-			ds_queue_enqueue(locations, currPiece); //Place the current Cell back into locations queue
-		}//end for
+        for (var i = 0; i < array_length(locations); i++) {
+            var currPiece = locations[i];
+            var strPiece = string(currPiece.getX()) + " " + string(currPiece.getY());
+            str += strPiece + " "; //Add string representation to front of final string
+        }
+
+		//for(var i = 0; i < ds_queue_size(locations); i++) {
+		//	var currPiece = ds_queue_dequeue(locations); //Pop the next Cell off of the locations queue
+		//	var strPiece = string(currPiece.getX() ) + " " + string(currPiece.getY() ); //Create string representation of the coordinates of currPiece
+		//	str = strPiece + " " + str; //Add string representation to front of final string
+		//	ds_queue_enqueue(locations, currPiece); //Place the current Cell back into locations queue
+		//}//end for
 		
 		return string_trim(str);
 	}//end toString
