@@ -199,6 +199,81 @@ function Hand() constructor {
 
         ds_priority_destroy(pq); //Destroy the priority queue since we no longer need it
     }//end sortByRankThenSuit
+	
+	/// @func evaluateHandRank()
+	/// @desc Evaluates the hand and returns its rank according to the given 3-Card Poker rules he gave us.
+	/// @return {string} The rank of the hand. Possible returns are "Straight Flush", "Three of a Kind", "Straight", "Flush", "Pair", "High Card".
+	/// AUTHOR: Ryan Livinghouse
+	function evaluateHandRank() {
+	    // Implement logic to check for each hand rank in order of highest to lowest
+	    if (isStraightFlush()) {
+	        return "Straight Flush";
+	    } else if (isThreeOfAKind()) {
+	        return "Three of a Kind";
+	    } else if (isStraight()) {
+	        return "Straight";
+	    } else if (isFlush()) {
+	        return "Flush";
+	    } else if (isPair()) {
+	        return "Pair";
+	    } else {
+	        return "High Card";
+	    }
+	}
+
+	/// @func isFlush()
+	/// @desc Checks if all cards are of the same suit.
+	/// @return {boolean}
+	/// AUTHOR: Ryan Livinghouse
+	function isFlush() {
+	    var firstSuit = hand[0].getSuit();
+	    return (hand[1].getSuit() == firstSuit) && (hand[2].getSuit() == firstSuit);
+	}
+
+	/// @func isStraight()
+	/// @desc Checks if the cards form a sequence.
+	/// @return {boolean}
+	/// AUTHOR: Ryan Livinghouse
+	function isStraight() {
+	    sortByRank();
+	    var rank0 = hand[0].getRank();
+	    var rank1 = hand[1].getRank();
+	    var rank2 = hand[2].getRank();
+    
+	    // Check for Ace-low straight (Ace-2-3)
+	    if (rank0 == RANK.TWO && rank1 == RANK.THREE && rank2 == RANK.ACE) {
+	        return true;
+	    }
+	    return (rank0 + 1 == rank1) && (rank1 + 1 == rank2);
+	}
+
+	/// @func isThreeOfAKind()
+	/// @desc Checks if all cards have the same rank.
+	/// @return {boolean}
+	/// AUTHOR: Ryan Livinghouse
+	function isThreeOfAKind() {
+	    return (hand[0].getRank() == hand[1].getRank()) && (hand[1].getRank() == hand[2].getRank());
+	}
+
+	/// @func isPair()
+	/// @desc Checks if two cards have the same rank.
+	/// @return {boolean}
+	/// AUTHOR: Ryan Livinghouse
+	function isPair() {
+		
+		//have to check all 3 combinations. 0-1, 0-2, and 1-2.
+	    return (hand[0].getRank() == hand[1].getRank()) ||
+	           (hand[0].getRank() == hand[2].getRank()) ||
+	           (hand[1].getRank() == hand[2].getRank());
+	}
+
+	/// @func isStraightFlush()
+	/// @desc Checks if the hand is both a straight and a flush.
+	/// @return {boolean}
+	/// AUTHOR: Ryan Livinghouse
+	function isStraightFlush() {
+	    return isStraight() && isFlush();
+	}
 
 	/// @func toString()
 	/// @desc Returns a string representation of the hand.
