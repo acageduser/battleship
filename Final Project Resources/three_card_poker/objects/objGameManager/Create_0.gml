@@ -1,5 +1,5 @@
 /// @desc Initialize game variables
-/// AUTHOR: Ryan Livinghouse
+/// AUTHOR: Ryan Livinghouse & Ewan Hurley
 playerBalance = 1000; //we rich.
 anteBet = 0;
 pairPlusBet = 0;
@@ -14,6 +14,9 @@ currentPhase = "Betting";	//i think the game starts on betting according to the 
 
 deck = new Deck();
 deck.shuffle(); //after each hand, the deck is fresh.
+
+playerHand = new Hand();
+dealerHand = new Hand();
 
 function dealCards() {
     //clear previous hands.
@@ -58,3 +61,32 @@ function updateBalance() {
     //display winnings/losses to the player console
     showPayoutMessage(totalPayout);
 }
+
+function flipPlayerHand() {
+	var playerCard1 = playerHand.getCard(0);
+	var playerCard2 = playerHand.getCard(1);
+	var playerCard3 = playerHand.getCard(2);
+	
+	show_debug_message(string(playerCard1) + " " + string(playerCard2) + " " + string(playerCard3));
+	
+	objPlayerCard1.image_index = playerCard1.getRank() * 4 + playerCard1.getSuit() + 1;
+	objPlayerCard2.image_index = playerCard2.getRank() * 4 + playerCard2.getSuit() + 1;
+	objPlayerCard3.image_index = playerCard3.getRank() * 4 + playerCard3.getSuit() + 1;
+}
+
+function flipDealerHand() {
+	var dealerCard1 = dealerHand.getCard(0);
+	var dealerCard2 = dealerHand.getCard(1);
+	var dealerCard3 = dealerHand.getCard(2);
+	
+	show_debug_message(string(dealerCard1) + " " + string(dealerCard2) + " " + string(dealerCard3));
+	
+	objDealerCard1.image_index = dealerCard1.getRank() * 4 + dealerCard1.getSuit() + 1;
+	objDealerCard2.image_index = dealerCard2.getRank() * 4 + dealerCard2.getSuit() + 1;
+	objDealerCard3.image_index = dealerCard3.getRank() * 4 + dealerCard3.getSuit() + 1;
+}
+
+//Testing
+dealCards();
+flipPlayerHand();
+flipDealerHand();

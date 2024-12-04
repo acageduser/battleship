@@ -1,5 +1,5 @@
 /// @desc Manage game phases
-/// AUTHOR: Ryan Livinghouse
+/// AUTHOR: Ryan Livinghouse & Ewan Hurley
 switch (currentPhase) {
     case "Betting":
         //wait for player to place bets and press a "Deal" button.
@@ -7,6 +7,7 @@ switch (currentPhase) {
     case "Dealing":
         //deal cards to player and dealer.
         dealCards();
+		flipPlayerHand();
         currentPhase = "Player Decision";
         break;
     case "Player Decision":
@@ -16,6 +17,7 @@ switch (currentPhase) {
     case "Dealer Reveal":
         //reveal dealer's hand and evaluate table.
         evaluateHands();
+		flipDealerHand();
         currentPhase = "Payout";
         break;
     case "Payout":
