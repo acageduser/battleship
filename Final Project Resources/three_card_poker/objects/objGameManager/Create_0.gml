@@ -38,6 +38,14 @@ function dealCards() {
     dealerHand.addCard(deck.deal());
     dealerHand.addCard(deck.deal());
     dealerHand.addCard(deck.deal());
+	
+	//Reveals the card backs
+	objPlayerCard1.image_alpha = 1;
+	objPlayerCard2.image_alpha = 1;
+	objPlayerCard3.image_alpha = 1;
+	objDealerCard1.image_alpha = 1;
+	objDealerCard2.image_alpha = 1;
+	objDealerCard3.image_alpha = 1;
 }
 
 function evaluateHands() {
@@ -67,8 +75,7 @@ function flipPlayerHand() {
 	var playerCard2 = playerHand.getCard(1);
 	var playerCard3 = playerHand.getCard(2);
 	
-	show_debug_message(string(playerCard1) + " " + string(playerCard2) + " " + string(playerCard3));
-	
+	//Set the card images
 	objPlayerCard1.image_index = playerCard1.getRank() * 4 + playerCard1.getSuit() + 1;
 	objPlayerCard2.image_index = playerCard2.getRank() * 4 + playerCard2.getSuit() + 1;
 	objPlayerCard3.image_index = playerCard3.getRank() * 4 + playerCard3.getSuit() + 1;
@@ -79,14 +86,26 @@ function flipDealerHand() {
 	var dealerCard2 = dealerHand.getCard(1);
 	var dealerCard3 = dealerHand.getCard(2);
 	
-	show_debug_message(string(dealerCard1) + " " + string(dealerCard2) + " " + string(dealerCard3));
-	
+	//Set the card images
 	objDealerCard1.image_index = dealerCard1.getRank() * 4 + dealerCard1.getSuit() + 1;
 	objDealerCard2.image_index = dealerCard2.getRank() * 4 + dealerCard2.getSuit() + 1;
 	objDealerCard3.image_index = dealerCard3.getRank() * 4 + dealerCard3.getSuit() + 1;
 }
 
-//Testing
-dealCards();
-flipPlayerHand();
-flipDealerHand();
+function hideCards() {
+	//Hides the cards
+	objPlayerCard1.image_alpha = 0;
+	objPlayerCard2.image_alpha = 0;
+	objPlayerCard3.image_alpha = 0;
+	objDealerCard1.image_alpha = 0;
+	objDealerCard2.image_alpha = 0;
+	objDealerCard3.image_alpha = 0;
+	
+	//Flips the cards back over
+	objPlayerCard1.image_index = 0;
+	objPlayerCard2.image_index = 0;
+	objPlayerCard3.image_index = 0;
+	objDealerCard1.image_index = 0;
+	objDealerCard2.image_index = 0;
+	objDealerCard3.image_index = 0;
+}
