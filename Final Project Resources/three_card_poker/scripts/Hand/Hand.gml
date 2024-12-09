@@ -202,22 +202,22 @@ function Hand() constructor {
 	
 	/// @func evaluateHandRank()
 	/// @desc Evaluates the hand and returns its rank according to the given 3-Card Poker rules he gave us.
-	/// @return {string} The rank of the hand. Possible returns are "Straight Flush", "Three of a Kind", "Straight", "Flush", "Pair", "High Card".
-	/// AUTHOR: Ryan Livinghouse
+	/// @return {real} The rank of the hand.
+	/// AUTHOR: Ryan Livinghouse & Ewan Hurley
 	function evaluateHandRank() {
 	    // Implement logic to check for each hand rank in order of highest to lowest
 	    if (isStraightFlush()) {
-	        return "Straight Flush";
+	        return 5;
 	    } else if (isThreeOfAKind()) {
-	        return "Three of a Kind";
+	        return 4;
 	    } else if (isStraight()) {
-	        return "Straight";
+	        return 3;
 	    } else if (isFlush()) {
-	        return "Flush";
+	        return 2;
 	    } else if (isPair()) {
-	        return "Pair";
+	        return 1;
 	    } else {
-	        return "High Card";
+	        return 0;
 	    }
 	}
 
@@ -273,6 +273,34 @@ function Hand() constructor {
 	/// AUTHOR: Ryan Livinghouse
 	function isStraightFlush() {
 	    return isStraight() && isFlush();
+	}
+	
+	/// @func hasQueenHighOrBetter()
+	/// @desc Checks if the hand contains a queen-high or better card.
+	/// @return {Boolean} True if the hand is queen-high or better, false otherwise.
+	///Author:Jimmy Trythall
+	function hasQueenHighOrBetter() {
+	    for (var i = 0; i < array_length(hand); i++) {
+	        var card = hand[i];
+	        if (card.getRank() >= RANK.QUEEN) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+
+	/// @func getHighestCard()
+	/// @desc Finds the highest value card and returns its rank.
+	/// @return {real} The highest card rank in the hand
+	/// Author: Ewan Hurley
+	function getHighestCard() {
+		var high = hand[0].getRank();
+		for (var i = 1; i < array_length(hand); i++) {
+			if (hand[i].getRank() > high) {
+				high = hand[i].getRank();
+			}
+		}
+		return high;
 	}
 
 	/// @func toString()

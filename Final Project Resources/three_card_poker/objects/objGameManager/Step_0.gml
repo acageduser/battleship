@@ -20,7 +20,6 @@ switch (currentPhase) {
         break;
     case "Dealing":
         //deal cards to player and dealer.
-		playerBalance -= (pairPlusBet + anteBet);
         dealCards();
         currentPhase = "Player Decision";
         break;

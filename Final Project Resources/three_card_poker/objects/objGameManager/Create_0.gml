@@ -1,5 +1,5 @@
 /// @desc Initialize game variables
-/// AUTHOR: Ryan Livinghouse & Ewan Hurley
+/// AUTHOR: Ryan Livinghouse, Ewan Hurley, & Jimmy Tryhall
 playerBalance = 1000; //we rich.
 anteBet = 0;
 pairPlusBet = 0;
@@ -17,6 +17,12 @@ deck.shuffle(); //after each hand, the deck is fresh.
 
 playerHand = new Hand();
 dealerHand = new Hand();
+
+playerHandRank = 0;
+dealerHandRank = 0;
+
+dealerQualifies = false;
+fold = false;
 
 function dealCards() {
     //clear previous hands.
@@ -46,6 +52,8 @@ function dealCards() {
 	objDealerCard1.image_alpha = 1;
 	objDealerCard2.image_alpha = 1;
 	objDealerCard3.image_alpha = 1;
+	
+	fold = false;
 }
 
 function evaluateHands() {
@@ -56,7 +64,7 @@ function evaluateHands() {
     dealerHandRank = dealerHand.evaluateHandRank();
 
     //determine if dealer even qualifies
-    dealerQualifies = dealerHand.hasQueenHighOrBetter(); //[!!NOTE!!] implement this method in Hand struct!!!
+    dealerQualifies = dealerHand.hasQueenHighOrBetter() || dealerHandRank > 0;
 }
 
 function updateBalance() {
@@ -108,4 +116,136 @@ function hideCards() {
 	objDealerCard1.image_index = 0;
 	objDealerCard2.image_index = 0;
 	objDealerCard3.image_index = 0;
+}
+/*
+function evaluateHands() {
+    // Evaluate player's hand
+    playerHandRank = evaluateHand(playerHand);
+
+    // Evaluate dealer's hand
+    dealerHandRank = evaluateHand(dealerHand);
+}
+
+function evaluateHand(hand) {
+    // Implement logic to check for different hand combinations
+    // For example:
+    var highCard = 0;
+    var hasPair = false;
+    var hasFlush = false;
+    // ... other hand combinations
+
+    // Check for high card
+    for (var i = 0; i < array_length(hand); i++) {
+        highCard = max(highCard, hand[i].getRank());
+    }
+
+    // Check for pair
+    for (var i = 0; i < array_length(hand) - 1; i++) {
+        for (var j = i + 1; j < array_length(hand); j++) {
+            if (hand[i].getRank() == hand[j].getRank()) {
+                hasPair = true;
+                break;
+            }
+        }
+    }
+
+    // ... (Implement checks for other hand combinations)
+
+    // Assign a numerical value to the hand rank based on the combinations found
+    var handRank = 0;
+    // ... (Assign values based on hand strength)
+
+    return handRank;
+}
+*/
+function calculatePayouts() {
+    var totalPayout = 0;
+
+    if (fold) { //checks if the player folds (for payout display)
+		totalPayout = -anteBet;
+	} else if (dealerQualifies) { //calculates payout if the dealer can play
+		totalPayout = calculatePlayWager() + calculateAnteBonus() + calculatePairPlus();
+	} else { //checks if the dealer can play
+		totalPayout = anteBet
+	}
+
+    return totalPayout;
+}
+
+function calculatePlayWager() {
+	if (!dealerQualifies) return anteBet; //player wins their ante back if the dealer can't play
+	
+	if (playerHandRank > dealerHandRank) { //player earns their ante and play bets if they have a higher rank
+		return anteBet * 2;
+	} else if (playerHandRank < dealerHandRank) { //player loses their ante and blay bets if they have a lower rank
+		return -anteBet * 2;
+	} else { //checks if the player and dealer have the same rank
+		if (playerHand.getHighestCard() > dealerHand.getHighestCard()) { //if the player has the high card, they win
+			return anteBet * 2;
+		} else if (playerHand.getHighestCard() < dealerHand.getHighestCard()) { //if the dealer has the high card, the player loses
+			return -anteBet * 2;
+		} else { //if they have the same rank and high card, the player and dealer tie and no money is lost
+			return 0;
+		}
+	}
+}
+
+function calculateAnteBonus() {
+	if (!dealerQualifies) return 0; //ante bonus is ignored if the dealer can't play
+	
+	if (playerHandRank == 3) { //if the player has a straight, they get their ante back as a bonus
+		return anteBet;
+	} else if (playerHandRank == 4) { //if the player has a three of a kind, they get their ante back 4 to 1 as a bonus
+		return anteBet * 4;
+	} else if (playerHandRank == 5) { //if the player has a straight flush, they get their ante back 5 to 1 as a bonus
+		return anteBet * 5;
+	} else { //if the player doesn't have any of the previous ranks, they get no bonus
+		return 0;
+	}
+}
+
+function calculatePairPlus() {
+	if (playerHandRank == 1) { //if the player has a pair, they get their pair plus back
+		return pairPlusBet;
+	} else if (playerHandRank == 2) { //if the player has a flush, they get their pair plus back 4 to 1
+		return pairPlusBet * 4;
+	} else if (playerHandRank == 3) { //if the player has a straight, they get their pair plus back 6 to 1
+		return pairPlusBet * 6;
+	} else if (playerHandRank == 4) { //if the player has a three of a kind, they get their pair plus back 30 to 1
+		return pairPlusBet * 30;
+	} else if (playerHandRank == 5) { //if the player has a straight flush, they get their pair plus back 40 to 1
+		return pairPlusBet * 40;
+	} else if (!dealerQualifies) { //if the dealer can't play, the pair plus is ignored
+		return 0;
+	} else { //if the player only has a high card, they lose their pair plus bet
+		return -pairPlusBet;
+	}
+}
+
+function showPayoutMessage(payout) {
+	var ranks = ["High Card", "Pair", "Flush", "Straight", "Three of a Kind", "Straight Flush"];
+	var compareString = "";
+	
+	//saves a string for comparing player and dealer ranks
+	if (dealerQualifies) {
+		compareString = ranks[playerHandRank] + " vs " + ranks[dealerHandRank];
+	} else {
+		compareString = "Dealer Doesn't Qualify"
+	}
+	
+	//saves a string for the payout message
+	var payoutString = "Ante/Play Wagers: " + string(calculatePlayWager()) + " (" + compareString +
+	")\nAnte Bonus: " + string(calculateAnteBonus()) +
+	"\nPair Plus Wager: " + string(calculatePairPlus()) + "\n";
+	
+	//saves a string for total payout
+    if (payout > 0) {
+        payoutString += "You won $" + string(payout);
+    } else if (payout < 0) {
+        payoutString += "You lost $" + string(-payout);
+    } else {
+        payoutString += "It's a tie!";
+    }
+	
+	show_message(payoutString);
 }
