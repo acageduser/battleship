@@ -1,5 +1,5 @@
 /// @desc Initialize game variables
-/// AUTHOR: Ryan Livinghouse, Ewan Hurley, & Jimmy Tryhall
+/// AUTHOR: Ryan Livinghouse, edited by Ewan and Jimmy
 playerBalance = 1000; //we rich.
 anteBet = 0;
 pairPlusBet = 0;
@@ -26,6 +26,10 @@ dealerHandRank = 0;
 dealerQualifies = false;
 fold = false;
 
+/// @func deakCards()
+/// @desc Resets the player and dealer hands and deals three cards to each. Also resets card sprites.
+/// @return {undefined}
+/// AUTHOR: Ryan Livinghouse, edited by Ewan
 function dealCards() {
     //clear previous hands.
     playerHand.clear();
@@ -68,6 +72,10 @@ function dealCards() {
 	fold = false;
 }
 
+/// @func evaluateHands()
+/// @desc Evaluates the hand ranks of the player and dealer, and checks if the dealer is qualified to play.
+/// @return {undefined}
+/// AUTHOR: Ryan Livinghouse, edited by Ewan
 function evaluateHands() {
     //evaluate player's hand
     playerHandRank = playerHand.evaluateHandRank();
@@ -79,9 +87,13 @@ function evaluateHands() {
     dealerQualifies = dealerHand.hasQueenHighOrBetter() || dealerHandRank > 0;
 }
 
+/// @func updateBalance()
+/// @desc Calculates the total payout, updates the balance, and displays the result.
+/// @return {undefined}
+/// AUTHOR: Ryan Livinghouse
 function updateBalance() {
     //calculate total payout
-    var totalPayout = calculatePayouts(); //need to make this yet.
+    var totalPayout = calculatePayouts();
 
     //update player's *beans* (money balance)
     playerBalance += totalPayout;
@@ -90,6 +102,10 @@ function updateBalance() {
     showPayoutMessage(totalPayout);
 }
 
+/// @func flipPlayerHand()
+/// @desc Updates the sprites for the player's hand to display the cards.
+/// @return {undefined}
+/// AUTHOR: Ewan Hurley
 function flipPlayerHand() {
 	var playerCard1 = playerHand.getCard(0);
 	var playerCard2 = playerHand.getCard(1);
@@ -101,6 +117,10 @@ function flipPlayerHand() {
 	objPlayerCard3.image_index = playerCard3.getRank() * 4 + playerCard3.getSuit() + 1;
 }
 
+/// @func flipDealerHand()
+/// @desc Updates the sprites for the dealer's hand to display the cards.
+/// @return {undefined}
+/// AUTHOR: Ewan Hurley
 function flipDealerHand() {
 	var dealerCard1 = dealerHand.getCard(0);
 	var dealerCard2 = dealerHand.getCard(1);
@@ -112,6 +132,10 @@ function flipDealerHand() {
 	objDealerCard3.image_index = dealerCard3.getRank() * 4 + dealerCard3.getSuit() + 1;
 }
 
+/// @func hideCards()
+/// @desc Updates the sprites for the player and dealer's hands to hide the cards and flip them back over.
+/// @return {undefined}
+/// AUTHOR: Ewan Hurley
 function hideCards() {
 	//Hides the cards
 	objPlayerCard1.image_alpha = 0;
@@ -130,6 +154,10 @@ function hideCards() {
 	objDealerCard3.image_index = 0;
 }
 
+/// @func calculatePayouts()
+/// @desc Calculates the payout for each wager and bonus. If the player folds or the dealer doesn't qualify, the total is just calculated using the ante bet.
+/// @return {real} The total payout after comparing hands.
+/// AUTHOR: Jimmy Tryhall, edited by Ewan
 function calculatePayouts() {
     var totalPayout = 0;
 
@@ -144,7 +172,13 @@ function calculatePayouts() {
     return totalPayout;
 }
 
+/// @func calculatePlayWager()
+/// @desc Calculates the payout of the ante and play wagers under any circumstance.
+/// @return {real} The payout of the ante and play wagers.
+/// AUTHOR: Ewan Hurley
 function calculatePlayWager() {
+	if (fold) return -anteBet; //player loses their ante bet if they fold
+	
 	if (!dealerQualifies) return anteBet; //player wins their ante back if the dealer can't play
 	
 	if (playerHandRank > dealerHandRank) { //player earns their ante and play bets if they have a higher rank
@@ -162,6 +196,10 @@ function calculatePlayWager() {
 	}
 }
 
+/// @func calculateAnteBonus()
+/// @desc Calculates the payout of the ante bonus depending on the player's hand rank and dealer qualification.
+/// @return {real} The payout of the ante bonus.
+/// AUTHOR: Ewan Hurley
 function calculateAnteBonus() {
 	if (!dealerQualifies) return 0; //ante bonus is ignored if the dealer can't play
 	
@@ -176,6 +214,10 @@ function calculateAnteBonus() {
 	}
 }
 
+/// @func calculatePairPlus()
+/// @desc Calculates the payout of the pair plus bet depending on the player's hand rank. Ignored if the dealer can't play.
+/// @return {real} The payout of the pair plus wager.
+/// AUTHOR: Ewan Hurley
 function calculatePairPlus() {
 	if (playerHandRank == 1) { //if the player has a pair, they get their pair plus back
 		return pairPlusBet;
@@ -187,22 +229,28 @@ function calculatePairPlus() {
 		return pairPlusBet * 30;
 	} else if (playerHandRank == 5) { //if the player has a straight flush, they get their pair plus back 40 to 1
 		return pairPlusBet * 40;
-	} else if (!dealerQualifies) { //if the dealer can't play, the pair plus is ignored
+	} else if (!dealerQualifies || fold) { //if the dealer can't play or the player folds, the pair plus is ignored
 		return 0;
 	} else { //if the player only has a high card, they lose their pair plus bet
 		return -pairPlusBet;
 	}
 }
 
+/// @func showPayoutMessage(payout)
+/// @desc Displays the results of the game for the player to understand.
+/// @return {undefined}
+/// AUTHOR: Jimmy Tryhall, edited by Ewan
 function showPayoutMessage(payout) {
 	var ranks = ["High Card", "Pair", "Flush", "Straight", "Three of a Kind", "Straight Flush"];
 	var compareString = "";
 	
 	//saves a string for comparing player and dealer ranks
-	if (dealerQualifies) {
+	if (fold) {
+		compareString = "Fold";
+	} else if (dealerQualifies) {
 		compareString = ranks[playerHandRank] + " vs " + ranks[dealerHandRank];
 	} else {
-		compareString = "Dealer Doesn't Qualify"
+		compareString = "Dealer Doesn't Qualify";
 	}
 	
 	//saves a string for the payout message

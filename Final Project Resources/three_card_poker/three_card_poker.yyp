@@ -56,7 +56,6 @@
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"Card","path":"scripts/Card/Card.yy",},},
     {"id":{"name":"Deck","path":"scripts/Deck/Deck.yy",},},
-    {"id":{"name":"Game","path":"scripts/Game/Game.yy",},},
     {"id":{"name":"Hand","path":"scripts/Hand/Hand.yy",},},
     {"id":{"name":"objBackground","path":"sprites/objBackground/objBackground.yy",},},
     {"id":{"name":"sprCards","path":"sprites/sprCards/sprCards.yy",},},

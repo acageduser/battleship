@@ -1,5 +1,5 @@
 /// @desc Changes the phase to dealer reveal
-/// AUTHOR Ewan Hurley
+/// AUTHOR Ewan Hurley, edited by Ryan
 
 
 event_inherited();

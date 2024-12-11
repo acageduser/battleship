@@ -1,5 +1,5 @@
 /// @desc Manage game phases
-/// AUTHOR: Ryan Livinghouse & Ewan Hurley
+/// AUTHOR: Ryan Livinghouse, edited by Ewan Hurley
 switch (currentPhase) {
     case "Betting":
 		showGhostText = true;
