@@ -57,6 +57,7 @@
     {"id":{"name":"Deck","path":"scripts/Deck/Deck.yy",},},
     {"id":{"name":"Game","path":"scripts/Game/Game.yy",},},
     {"id":{"name":"Hand","path":"scripts/Hand/Hand.yy",},},
+    {"id":{"name":"objBackground","path":"sprites/objBackground/objBackground.yy",},},
     {"id":{"name":"sprCards","path":"sprites/sprCards/sprCards.yy",},},
     {"id":{"name":"sprInput","path":"sprites/sprInput/sprInput.yy",},},
   ],
