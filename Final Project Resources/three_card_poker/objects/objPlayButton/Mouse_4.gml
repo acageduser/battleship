@@ -4,6 +4,8 @@
 
 event_inherited();
 
+if (!enabled) exit;
+
 with (objGameManager) {
     currentPhase = "Dealer Reveal";
 }

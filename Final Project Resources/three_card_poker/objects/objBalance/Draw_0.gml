@@ -7,7 +7,7 @@ draw_set_halign(fa_center);
 
 text = string(objGameManager.playerBalance);
 
-_x = 90
+_x = 110
 _y = 20
 
 text = string_format(objGameManager.playerBalance, 0, 2);	//text is weird. should have stored as a string? 
@@ -26,12 +26,12 @@ if (objGameManager.showGhostText) {
     //check if the current bet is too big
     if (objGameManager.anteBet + objGameManager.pairPlusBet > maxBet) {
         draw_set_color(c_red); //turn text red
-        draw_text(_x + 1000, _y + 230, "Bet too high!");
-        draw_text(_x + 1000, _y + 490, "Bet too high!");
+        draw_text(_x + 980, _y + 230, "Bet too high!");
+        draw_text(_x + 980, _y + 490, "Bet too high!");
     } else {
         draw_set_color(c_white); //turn text back to white
-        draw_text(_x + 1000, _y + 230, "Max Pair Plus: $" + string_format(pairPlusGhost, 0, 2));
-        draw_text(_x + 1000, _y + 490, "Max Ante: $" + string_format(anteGhost, 0, 2));
+        draw_text(_x + 980, _y + 230, "Max Pair Plus: $" + string_format(pairPlusGhost, 0, 2));
+        draw_text(_x + 980, _y + 490, "Max Ante: $" + string_format(anteGhost, 0, 2));
     }
 
     // don't forget to switch back to white

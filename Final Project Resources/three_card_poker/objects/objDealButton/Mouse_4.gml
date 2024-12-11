@@ -2,6 +2,7 @@
 /// AUTHOR Ewan Hurley, edited by RYAN
 
 event_inherited();
+if (!enabled) exit;
 
 with (objGameManager) {
     //calculate what the max bet is
