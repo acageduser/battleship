@@ -41,11 +41,21 @@ function dealCards() {
     playerHand.addCard(deck.deal());
     playerHand.addCard(deck.deal());
     playerHand.addCard(deck.deal());
+	
+
+	//TESTING ONLY: Straight Flush
+	//playerHand.addCard(new Card(RANK.JACK, SUIT.HEARTS));
+	//playerHand.addCard(new Card(RANK.QUEEN, SUIT.HEARTS));
+	//playerHand.addCard(new Card(RANK.KING, SUIT.HEARTS));
+
 
     //deal cards to dealer
     dealerHand.addCard(deck.deal());
     dealerHand.addCard(deck.deal());
     dealerHand.addCard(deck.deal());
+	
+	//check it here because in evaluate hands its too late to display in the rank system
+    playerHandRank = playerHand.evaluateHandRank();
 	
 	//Reveals the card backs
 	objPlayerCard1.image_alpha = 1;

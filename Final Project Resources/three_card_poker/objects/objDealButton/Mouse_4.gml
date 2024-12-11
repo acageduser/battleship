@@ -21,10 +21,24 @@ with (objGameManager) {
     //To fix this, always read anteBet and pairPlusBet from their input boxes
     //before doing any checks, and don’t rely solely on validBet because its pretty trash and slow
     
-    anteBet = real(objAnte.text);
-    pairPlusBet = real(objPairPlus.text);
+
 
     var maxBet = (playerBalance / 2);
+	
+    //fix the bug here input boxes being blank runtime error. check if the input boxes are blank and handle them
+    if (objAnte.text == "" || !is_real(real(objAnte.text))) {
+        anteBet = 0; // Default to 0 if input is blank or invalid
+    } else {
+        anteBet = real(objAnte.text);
+    }
+
+    if (objPairPlus.text == "" || !is_real(real(objPairPlus.text))) {
+        pairPlusBet = 0; // Default to 0 if input is blank or invalid
+    } else {
+        pairPlusBet = real(objPairPlus.text);
+    }
+    var anteLimit = maxBet;
+    var pairPlusLimit = maxBet;
 	
     //fix the bug where if the user has 0.01 dollars, the game gets stuck because they can't 
 	//lose because losing happens at 0 dollars and they can't bet either since the bet has to
@@ -39,14 +53,11 @@ with (objGameManager) {
         pairPlusBet = 0;
         showGhostText = true;
         betTooHigh = false;
-        exit; //end this event to prevent further checks
+        exit; //it seems to keep checking even after for some reason so we NEED to break
 
     }
 
 	
-    var anteLimit = maxBet;
-    var pairPlusLimit = maxBet;
-
     if ((anteBet + pairPlusBet <= maxBet) && (anteBet != 0 || pairPlusBet != 0)) { 
         //checks for valid bet
         currentPhase = "Dealing";

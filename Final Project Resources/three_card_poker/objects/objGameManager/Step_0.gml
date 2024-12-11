@@ -53,3 +53,4 @@ switch (currentPhase) {
         currentPhase = "Betting";
         break;
 }
+
