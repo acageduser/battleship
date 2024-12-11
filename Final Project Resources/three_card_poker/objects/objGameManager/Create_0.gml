@@ -129,47 +129,7 @@ function hideCards() {
 	objDealerCard2.image_index = 0;
 	objDealerCard3.image_index = 0;
 }
-/*
-function evaluateHands() {
-    // Evaluate player's hand
-    playerHandRank = evaluateHand(playerHand);
 
-    // Evaluate dealer's hand
-    dealerHandRank = evaluateHand(dealerHand);
-}
-
-function evaluateHand(hand) {
-    // Implement logic to check for different hand combinations
-    // For example:
-    var highCard = 0;
-    var hasPair = false;
-    var hasFlush = false;
-    // ... other hand combinations
-
-    // Check for high card
-    for (var i = 0; i < array_length(hand); i++) {
-        highCard = max(highCard, hand[i].getRank());
-    }
-
-    // Check for pair
-    for (var i = 0; i < array_length(hand) - 1; i++) {
-        for (var j = i + 1; j < array_length(hand); j++) {
-            if (hand[i].getRank() == hand[j].getRank()) {
-                hasPair = true;
-                break;
-            }
-        }
-    }
-
-    // ... (Implement checks for other hand combinations)
-
-    // Assign a numerical value to the hand rank based on the combinations found
-    var handRank = 0;
-    // ... (Assign values based on hand strength)
-
-    return handRank;
-}
-*/
 function calculatePayouts() {
     var totalPayout = 0;
 
