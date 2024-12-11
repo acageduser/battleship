@@ -2,6 +2,7 @@
 /// AUTHOR: Ryan Livinghouse & Ewan Hurley
 switch (currentPhase) {
     case "Betting":
+		showGhostText = true;
         //wait for player to place bets and press a "Deal" button.
 		hideCards();
 		if (objPairPlus.validBet) { //If there is an inputted bet, save it
@@ -42,6 +43,13 @@ switch (currentPhase) {
     case "Payout":
         //calcluate payouts and update balance $$$$$$.
         updateBalance();
+		
+		//add game_restart function if the player is out of beans
+		if (playerBalance <= 0) {
+		    show_message("You're out of money! Click OK to reset the game.");
+		    game_restart();
+		}
+		
         currentPhase = "Betting";
         break;
 }

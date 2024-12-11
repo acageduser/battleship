@@ -3,6 +3,8 @@
 playerBalance = 1000; //we rich.
 anteBet = 0;
 pairPlusBet = 0;
+showGhostText = true; //this is for the ante and pair plus max text
+betTooHigh = false;
 currentPhase = "Betting";	//i think the game starts on betting according to the rules.
 							//gonna use case switch to control which state the game is in
 							//the possible states are
